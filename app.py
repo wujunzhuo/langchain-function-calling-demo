@@ -199,7 +199,7 @@ def main():
     system_prompt = "You are a very helpful assistant. Your job is to choose the best possible action to solve the user question or task. Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous."
 
     streamlit.title("Currency converter")
-    user_question = st.text_input("Ask a question about currency:")
+    user_question = streamlit.text_input("Ask a question about currency:")
 
     if user_question:
         messages = [SystemMessage(system_prompt), HumanMessage(user_question)]
