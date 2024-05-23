@@ -1,7 +1,7 @@
 from langchain_core.tools import tool
 from langchain_core.messages import SystemMessage, HumanMessage, ToolMessage
 from langchain_openai import ChatOpenAI
-import streamlit as st
+import streamlit
 
 RATES = {
     "AED": 3.673,
@@ -177,7 +177,7 @@ RATES = {
 
 
 def fetch_rate(target):
-    return RATES[target]
+    return RATES.get(target, 0)
 
 
 @tool
@@ -194,13 +194,11 @@ def currency_converter(source: str, target: str, amount: float):
 
 
 def main():
-    llm = ChatOpenAI(
-        model_name="gpt-4o"
-    ).bind_tools([currency_converter])
+    llm = ChatOpenAI(model_name="gpt-4o").bind_tools([currency_converter])
 
     system_prompt = "You are a very helpful assistant. Your job is to choose the best possible action to solve the user question or task. Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous."
 
-    st.title("Currency converter")
+    streamlit.title("Currency converter")
     user_question = st.text_input("Ask a question about currency:")
 
     if user_question:
@@ -212,7 +210,7 @@ def main():
                 output = currency_converter.invoke(tc["args"])
                 messages.append(ToolMessage(output, tool_call_id=tc["id"]))
                 response = llm.invoke(messages).content
-                st.write(response)
+                streamlit.write(response)
 
 
 if __name__ == "__main__":
